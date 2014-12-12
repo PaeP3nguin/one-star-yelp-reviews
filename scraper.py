@@ -18,8 +18,6 @@ page = requests.get('http://www.yelp.com/biz/' + business_name + '?start=' + str
 
 tree = html.fromstring(page.text)
 
-one_star_text = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../p[@itemprop="description"]/text()')
-
 one_star_reviews = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../..')
 
 highest_rating_sum = -1
@@ -40,8 +38,6 @@ for review_wrapper in one_star_reviews:
     if funny_rating > funniest_rating:
         funniest_review = review_rating_pair
         funniest_rating = funny_rating
-
-ratings = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../..//span[@class="count"]/text()')
 
 print highest_rated_review
 print offset
