@@ -18,7 +18,30 @@ page = requests.get('http://www.yelp.com/biz/' + business_name + '?start=' + str
 
 tree = html.fromstring(page.text)
 
-one_star_text = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../p[@itemprop="description"]//text()')
+one_star_text = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../p[@itemprop="description"]/text()')
 
-print one_star_text
+one_star_reviews = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../..')
+
+highest_rating_sum = -1
+funniest_rating = -1
+review_rating_pairs = []
+for review_wrapper in one_star_reviews:
+    review_text = ' '.join(review_wrapper.xpath('div//p[@itemprop="description"]/text()'))
+    review_ratings = review_wrapper.xpath('*//span[@class="count"]//text()')
+    funny_rating = int(review_wrapper.xpath('*//span[@class="i-wrap ig-wrap-common i-ufc-funny-common-wrap button-content"]/span[@class="count"]//text()')[0])
+    rating_sum = sum(map(int, review_ratings))
+    
+    review_rating_pair = [review_text, rating_sum]
+    review_rating_pairs.append(review_rating_pair)
+    if rating_sum > highest_rating_sum:
+        highest_rated_review = review_rating_pair
+        highest_rating_sum = rating_sum
+        
+    if funny_rating > funniest_rating:
+        funniest_review = review_rating_pair
+        funniest_rating = funny_rating
+
+ratings = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../..//span[@class="count"]/text()')
+
+print highest_rated_review
 print offset
