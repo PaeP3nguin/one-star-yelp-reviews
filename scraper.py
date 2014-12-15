@@ -101,7 +101,7 @@ def draw_text (img_name, text):
     draw = ImageDraw.Draw(img, 'RGBA')
     draw.rectangle([(0, img_height * 0.7), (img_width, img_height * 0.7 + 150)], (0, 0, 0, 150))
     
-    wrapped = textwrap.wrap(text)
+    wrapped = textwrap.wrap(text, 40)
     font, text_width, text_height = fit_text(wrapped, img_width, 150)
     
     text_y_pos = img_height * 0.7 + (150 - text_height) / 2
