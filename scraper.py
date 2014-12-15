@@ -25,8 +25,8 @@ def main():
     business_tree = html.fromstring(business_page.text)
 
     # Gets business name and image
-    business_name = business_tree.xpath('//h1[@itemprop="name"]/text()')[0].strip().replace(' ','%20')
-    img_url = top_google_img_url(business_name)
+    business_name = business_tree.xpath('//h1[@itemprop="name"]/text()')[0].strip()
+    img_url = top_google_img_url(business_name.replace(' ','%20'))
     img_name = urlparse.urlparse(img_url).path.split('/')[-1]
     urllib.urlretrieve(img_url, img_name)
 
@@ -76,20 +76,17 @@ def main():
     
     # Either picks sentence randomly or prompts user to select, based on command line arguments
     if len(sys.argv) >= 3 and sys.argv[2] is 'rand':
-        text = '"%s" - Yelp, %s/5 stars' % (random.choice(sentences), stars)
-        caption = '"%s" - Yelp, %s, %s/5 stars' % (chosen, raw_input("Enter business name for caption: "), stars)
+        text = '"%s" - Yelp, %s, %s/5 stars' % (random.choice(sentences), business_name, stars)
     else:
         for sentence in enumerate(sentences):
             print sentence
         print '\n'
         indexes = map(int, raw_input("Enter sentence number(s), separated by spaces: ").split(' '))
         chosen = ' '.join([sentences[i] for i in indexes])
-        text = '"%s" - Yelp, %s/5 stars' % (chosen, stars)
-        caption = '"%s" - Yelp, %s, %s/5 stars' % (chosen, raw_input("Enter business name for caption: "), stars)
-        print caption
+        text = '"%s" - Yelp, %s, %s/5 stars' % (chosen, business_name, stars)
 
     new_name = draw_text(img_name, text)
-    post_picture(new_name, caption)
+    post_picture(new_name, text)
 
 def top_google_img_url (biz_name):
     search_url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%s&imgtype=photo' % biz_name
