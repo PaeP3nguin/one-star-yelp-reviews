@@ -81,8 +81,10 @@ def main():
         for sentence in enumerate(sentences):
             print sentence
         print '\n'
-        chosen = int(raw_input("Enter a sentence number: "))
-        text = '"%s" - Yelp, %s/5 stars' % (sentences[chosen], stars)
+        indexes = map(int, raw_input("Enter sentence number(s), separated by spaces: ").split(' '))
+        chosen = ' '.join([sentences[i] for i in indexes])
+        text = '"%s" - Yelp, %s/5 stars' % (chosen, stars)
+        print text
 
     new_name = draw_text(img_name, text)
     post_picture(new_name, text)
@@ -110,7 +112,7 @@ def draw_text (img_name, text):
     draw = ImageDraw.Draw(img, 'RGBA')
     draw.rectangle([(0, img_height * 0.7), (img_width, img_height * 0.7 + 150)], (0, 0, 0, 150))
     
-    wrapped = textwrap.wrap(text, 40)
+    wrapped = textwrap.wrap(text, 50)
     font, text_width, text_height = fit_text(wrapped, img_width, 150)
     
     text_y_pos = img_height * 0.7 + (150 - text_height) / 2
@@ -118,7 +120,7 @@ def draw_text (img_name, text):
         line_width, line_height = font.getsize(line)
         text_x_pos = (img_width - line_width) / 2
         draw.text((text_x_pos, text_y_pos), line, (255,255,255), font)
-        text_y_pos += line_height + 5
+        text_y_pos += line_height
     
     new_name = 'capt_' + img_name
     img.save(new_name)
