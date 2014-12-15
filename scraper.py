@@ -144,13 +144,11 @@ def text_size (font, lines):
     
 def post_picture (img_name, caption):
     client = pytumblr.TumblrRestClient(
-        '<consumer_key>',
-        '<consumer_secret>',
-        '<oauth_token>',
-        '<oauth_secret>',
+      'get yer own'
     )
     
-    client.create_photo('onestaryelp', state="draft", tags=["yelp"], data=img_name, caption=caption)
+    pls = text.replace(' ','&nbsp;')
+    client.create_photo('onestaryelp', state="queue", tags=["yelp"], data=str(img_name), caption=pls)
 
 if __name__ == '__main__':
     main()
