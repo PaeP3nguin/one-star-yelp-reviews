@@ -103,7 +103,7 @@ def top_google_img_url (biz_name):
     return None
 
 def big_enough (img):
-    return int(img['height']) >= 768 and int(img['width']) >= 512
+    return int(img['height']) >= 512 and int(img['width']) >= 512
     
 def draw_text (img_name, text):
     img = Image.open(img_name)
