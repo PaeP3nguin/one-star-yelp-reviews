@@ -38,6 +38,13 @@ def main():
 
     # Gets all one star review wrappers
     one_star_reviews = tree.xpath('//meta[@itemprop="ratingValue"][@content="1.0"]/../../../../..')
+    
+    if not one_star_reviews:
+        print "Uh-oh! No one-star reviews found, looking at two-star reviews"
+        one_star_reviews = tree.xpath('//meta[@itemprop="ratingValue"][@content="2.0"]/../../../../..')
+        stars = 2
+    else:
+        stars = 1
 
     # Makes list of reviews along with their total rating and finds the funniest rated review
     highest_rating_sum = -1
@@ -69,18 +76,16 @@ def main():
     
     # Either picks sentence randomly or prompts user to select, based on command line arguments
     if len(sys.argv) >= 3 and sys.argv[2] is 'rand':
-        text = '"%s" - Yelp, 1/5 stars' % random.choice(sentences)
+        text = '"%s" - Yelp, %s/5 stars' % (random.choice(sentences), stars)
     else:
         for sentence in enumerate(sentences):
             print sentence
         print '\n'
         chosen = int(raw_input("Enter a sentence number: "))
-        text = '"%s" - Yelp, 1/5 stars' % sentences[chosen]
+        text = '"%s" - Yelp, %s/5 stars' % (sentences[chosen], stars)
 
     new_name = draw_text(img_name, text)
-    
-    if raw_input("Take a look and enter y to post, anything else to cancel:") is 'y':
-        post_picture(new_name, text)
+    post_picture(new_name, text)
 
 def top_google_img_url (biz_name):
     search_url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%s' % biz_name
@@ -143,12 +148,21 @@ def text_size (font, lines):
     return [total_width, total_height]
     
 def post_picture (img_name, caption):
+    choice = raw_input("Take a look! Enter p to post, q to queue, d to draft, anything else to cancel:")
+    if choice is 'p':
+        state = 'published'
+    elif choice is 'q':
+        state = 'queue'
+    elif choice is 'd':
+        state = 'draft'
+    else:
+        return
+        
     client = pytumblr.TumblrRestClient(
       'get yer own'
     )
-    
-    pls = text.replace(' ','&nbsp;')
-    client.create_photo('onestaryelp', state="queue", tags=["yelp"], data=str(img_name), caption=pls)
+    pls = caption.replace(' ','&nbsp;')
+    client.create_photo('onestaryelp', state=state, tags=["yelp"], data=str(img_name), caption=pls)
 
 if __name__ == '__main__':
     main()
