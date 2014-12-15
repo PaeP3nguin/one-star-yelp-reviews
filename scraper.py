@@ -77,6 +77,7 @@ def main():
     # Either picks sentence randomly or prompts user to select, based on command line arguments
     if len(sys.argv) >= 3 and sys.argv[2] is 'rand':
         text = '"%s" - Yelp, %s/5 stars' % (random.choice(sentences), stars)
+        caption = '"%s" - Yelp, %s, %s/5 stars' % (chosen, raw_input("Enter business name for caption: "), stars)
     else:
         for sentence in enumerate(sentences):
             print sentence
@@ -84,10 +85,11 @@ def main():
         indexes = map(int, raw_input("Enter sentence number(s), separated by spaces: ").split(' '))
         chosen = ' '.join([sentences[i] for i in indexes])
         text = '"%s" - Yelp, %s/5 stars' % (chosen, stars)
-        print text
+        caption = '"%s" - Yelp, %s, %s/5 stars' % (chosen, raw_input("Enter business name for caption: "), stars)
+        print caption
 
     new_name = draw_text(img_name, text)
-    post_picture(new_name, text)
+    post_picture(new_name, caption)
 
 def top_google_img_url (biz_name):
     search_url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%s' % biz_name
@@ -112,7 +114,7 @@ def draw_text (img_name, text):
     draw = ImageDraw.Draw(img, 'RGBA')
     draw.rectangle([(0, img_height * 0.7), (img_width, img_height * 0.7 + 150)], (0, 0, 0, 150))
     
-    wrapped = textwrap.wrap(text, 50)
+    wrapped = textwrap.wrap(text, 60)
     font, text_width, text_height = fit_text(wrapped, img_width, 150)
     
     text_y_pos = img_height * 0.7 + (150 - text_height) / 2
