@@ -6,6 +6,7 @@ import nltk.data
 import urllib
 import urllib2
 import json
+import pytumblr
 import random
 import textwrap
 
@@ -68,15 +69,18 @@ def main():
     
     # Either picks sentence randomly or prompts user to select, based on command line arguments
     if len(sys.argv) >= 3 and sys.argv[2] is 'rand':
-        text = random.choice(sentences)
+        text = '"%s" - Yelp, 1/5 stars' % random.choice(sentences)
     else:
         for sentence in enumerate(sentences):
             print sentence
         print '\n'
         chosen = int(raw_input("Enter a sentence number: "))
-        text = sentences[chosen]
+        text = '"%s" - Yelp, 1/5 stars' % sentences[chosen]
 
-    draw_text(img_name, text)
+    img = draw_text(img_name, text)
+    
+    if raw_input("Take a look and enter y to post, anything else to cancel:") is 'y':
+        post_picture('capt_' + img_name, text)
 
 def top_google_img_url (biz_name):
     search_url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%s' % biz_name
@@ -111,7 +115,9 @@ def draw_text (img_name, text):
         draw.text((text_x_pos, text_y_pos), line, (255,255,255), font)
         text_y_pos += line_height + 5
     
-    img.save('test_' + img_name)
+    img.save('capt_' + img_name)
+    
+    return img
     
 def fit_text (lines, width, height):
     test_size = 14
@@ -134,6 +140,16 @@ def text_size (font, lines):
         if width > total_width:
             total_width = width
     return [total_width, total_height]
+    
+def post_picture (img_name, caption):
+    client = pytumblr.TumblrRestClient(
+        '<consumer_key>',
+        '<consumer_secret>',
+        '<oauth_token>',
+        '<oauth_secret>',
+    )
+    
+    client.create_photo('onestaryelp', state="published", tags=["yelp", "ok"], data=img_name, caption=caption)
 
 if __name__ == '__main__':
     main()
