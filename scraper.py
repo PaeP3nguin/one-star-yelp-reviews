@@ -77,10 +77,10 @@ def main():
         chosen = int(raw_input("Enter a sentence number: "))
         text = '"%s" - Yelp, 1/5 stars' % sentences[chosen]
 
-    img = draw_text(img_name, text)
+    new_name = draw_text(img_name, text)
     
     if raw_input("Take a look and enter y to post, anything else to cancel:") is 'y':
-        post_picture('capt_' + img_name, text)
+        post_picture(new_name, text)
 
 def top_google_img_url (biz_name):
     search_url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%s' % biz_name
@@ -115,9 +115,10 @@ def draw_text (img_name, text):
         draw.text((text_x_pos, text_y_pos), line, (255,255,255), font)
         text_y_pos += line_height + 5
     
-    img.save('capt_' + img_name)
+    new_name = 'capt_' + img_name
+    img.save(new_name)
     
-    return img
+    return new_name
     
 def fit_text (lines, width, height):
     test_size = 14
@@ -149,7 +150,7 @@ def post_picture (img_name, caption):
         '<oauth_secret>',
     )
     
-    client.create_photo('onestaryelp', state="published", tags=["yelp", "ok"], data=img_name, caption=caption)
+    client.create_photo('onestaryelp', state="draft", tags=["yelp"], data=img_name, caption=caption)
 
 if __name__ == '__main__':
     main()
