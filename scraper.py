@@ -92,7 +92,7 @@ def main():
     post_picture(new_name, caption)
 
 def top_google_img_url (biz_name):
-    search_url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%s' % biz_name
+    search_url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=%s&imgtype=photo' % biz_name
     conn = urllib2.urlopen(search_url)
     try:
         response = json.loads(conn.read())
