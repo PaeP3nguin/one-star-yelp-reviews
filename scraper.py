@@ -25,7 +25,7 @@ def main():
     business_tree = html.fromstring(business_page.text)
 
     # Gets business name and image
-    business_name = business_tree.xpath('//h1[@itemprop="name"]/text()')[0].strip()
+    business_name = business_tree.xpath('//h1[@itemprop="name"]/text()')[0].strip().encode('ascii','ignore')
     img_url = top_google_img_url(business_name.replace(' ','%20'))
     img_name = urlparse.urlparse(img_url).path.split('/')[-1]
     urllib.urlretrieve(img_url, img_name)
@@ -111,7 +111,7 @@ def draw_text (img_name, text):
     draw = ImageDraw.Draw(img, 'RGBA')
     draw.rectangle([(0, img_height * 0.7), (img_width, img_height * 0.7 + 150)], (0, 0, 0, 150))
     
-    wrapped = textwrap.wrap(text, 60)
+    wrapped = textwrap.wrap(text, 70)
     font, text_width, text_height = fit_text(wrapped, img_width, 150)
     
     text_y_pos = img_height * 0.7 + (150 - text_height) / 2
@@ -122,7 +122,7 @@ def draw_text (img_name, text):
         text_y_pos += line_height
     
     new_name = 'capt_' + img_name
-    img.save(new_name)
+    img.save('captioned/' + new_name)
     
     return new_name
     
@@ -163,7 +163,7 @@ def post_picture (img_name, caption):
       'get yer own'
     )
     pls = caption.replace(' ','&nbsp;')
-    client.create_photo('onestaryelp', state=state, tags=["yelp"], data=str(img_name), caption=pls)
+    client.create_photo('onestaryelp', state=state, tags=["yelp"], data='captioned/' + str(img_name), caption=pls)
 
 if __name__ == '__main__':
     main()
