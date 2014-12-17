@@ -28,7 +28,7 @@ def main():
     business_name = business_tree.xpath('//h1[@itemprop="name"]/text()')[0].strip().encode('ascii','ignore')
     img_url = top_google_img_url(business_name.replace(' ','%20'))
     img_name = urlparse.urlparse(img_url).path.split('/')[-1]
-    urllib.urlretrieve(img_url, img_name)
+    urllib.urlretrieve(img_url, 'downloaded/' + img_name)
 
     # Finds review count on page and retrieves the last page of reviews
     review_count = int(business_tree.xpath('//*[@id="super-container"]/div/div/div[1]/div[3]/div[1]/div[1]/div[2]/ul[2]/li[1]/span/text()')[0])
@@ -112,7 +112,7 @@ def big_enough (img):
 # Uses PIL to overlay rectangle and text to image
 def draw_text (img_name, text):
     # Draws semi-transparent black rectangle starting at 70% down the image to increase text visibility
-    img = Image.open(img_name)
+    img = Image.open('downloaded/' + img_name)
     img.thumbnail((1000, 1000), Image.ANTIALIAS)
     img_width, img_height = img.size
     draw = ImageDraw.Draw(img, 'RGBA')
