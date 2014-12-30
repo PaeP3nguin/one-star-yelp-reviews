@@ -31,7 +31,7 @@ def main():
     urllib.urlretrieve(img_url, 'downloaded/' + img_name)
 
     # Finds review count on page and retrieves the last page of reviews
-    review_count = int(business_tree.xpath('//*[@id="super-container"]/div/div/div[1]/div[3]/div[1]/div[1]/div[2]/ul[2]/li[1]/span/text()')[0])
+    review_count = int(business_tree.xpath('//a[@data-lang="en"]/..//span[@class="count"]/text()')[0])
     offset = (review_count - 1) //40 * 40;
     page = requests.get('http://www.yelp.com/biz/' + business_url_name + '?start=' + str(offset) + '&sort_by=rating_desc')
     tree = html.fromstring(page.text)
