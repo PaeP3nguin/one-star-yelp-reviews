@@ -27,6 +27,9 @@ def main():
     # Gets business name and image
     business_name = business_tree.xpath('//h1[@itemprop="name"]/text()')[0].strip().encode('ascii','ignore')
     img_url = top_google_img_url(business_name.replace(' ','%20'))
+    if (img_url == None):
+        print "Uh-oh! No properly sized images were found :("
+        return
     img_name = urlparse.urlparse(img_url).path.split('/')[-1]
     urllib.urlretrieve(img_url, 'downloaded/' + img_name)
 
