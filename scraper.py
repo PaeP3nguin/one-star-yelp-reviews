@@ -84,7 +84,11 @@ def main():
         for sentence in enumerate(sentences):
             print sentence
         print '\n'
-        indexes = map(int, raw_input("Enter sentence number(s), separated by spaces: ").split(' '))
+        selection = raw_input("Enter sentence number(s), separated by spaces or 'c' to cancel: ")
+        if (selection == 'c'):
+            print "Canceled, no image generated"
+            return
+        indexes = map(int, selection.split(' '))
         chosen = ' '.join([sentences[i] for i in indexes])
         text = '"%s" - Yelp, %s, %s/5 stars' % (chosen, business_name, stars)
 
